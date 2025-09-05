@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solo respira</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle, #a8edea, #fed6e3);
+      font-family: 'Helvetica', sans-serif;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 50px;
+      z-index: 1;
+    }
+
+    button {
+      font-size: 2rem;
+      padding: 20px 40px;
+      border: none;
+      border-radius: 50px;
+      background-color: #ffffff33;
+      cursor: pointer;
+      transition: background 0.3s;
+      z-index: 1;
+      color: #333;
+    }
+
+    button:hover {
+      background-color: #ffffff66;
+    }
+
+    audio {
+      display: none;
+    }
+
+    /* Estrellas */
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Respira… aquí no necesitas hacer nada más</h1>
+  <button id="playPause">▶</button>
+  <audio id="audio" src="audio.mp3"></audio>
+
+  <script>
+    const button = document.getElementById('playPause');
+    const audio = document.getElementById('audio');
+
+    button.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        button.textContent = "⏸";
+      } else {
+        audio.pause();
+        button.textContent = "▶";
+      }
+    });
+
+    // Crear estrellas con movimiento natural
+    const starsCount = 50;
+    const stars = [];
+
+    for(let i = 0; i < starsCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.width = star.style.height = (1 + Math.random() * 3) + 'px';
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.opacity = 0.3 + Math.random() * 0.7;
+      document.body.appendChild(star);
+      stars.push({
+        el: star,
+        x: parseFloat(star.style.left),
+        y: parseFloat(star.style.top),
+        dx: (Math.random() - 0.5) * 0.3, // velocidad horizontal
+        dy: (Math.random() - 0.5) * 0.3  // velocidad vertical
+      });
+    }
+
+    function animateStars() {
+      stars.forEach(star => {
+        star.x += star.dx;
+        star.y += star.dy;
+
+        // Mantener dentro de la pantalla
+        if(star.x < 0) star.x = window.innerWidth;
+        if(star.x > window.innerWidth) star.x = 0;
+        if(star.y < 0) star.y = window.innerHeight;
+        if(star.y > window.innerHeight) star.y = 0;
+
+        star.el.style.left = star.x + 'px';
+        star.el.style.top = star.y + 'px';
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    animateStars();
+  </script>
+</body>
+</html>
